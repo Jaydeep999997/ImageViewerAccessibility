@@ -112,7 +112,6 @@ const newElement = function (imageID) {
 
 // truncate text
 const setText = function () {
-  console.log("Here");
   document.querySelectorAll(".img").forEach((item, Index) => {
     truncate(item.querySelector("figcaption"), imageData[Index]["title"]);
   });
