@@ -1,2 +1,2 @@
-# ImageViewerAccessibility.github.io
+# ImageViewerAccessibility
 Simple Image viewer using HTML, CSS and JS
