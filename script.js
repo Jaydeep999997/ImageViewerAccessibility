@@ -1,6 +1,6 @@
-import { imageData } from "./assets/dataSet.js";
-import { truncate } from "./assets/truncateBS.js";
-import { keyCodes } from "./assets/keyCodes.js";
+import { imageData } from "./src/dataSet.js";
+import { truncate } from "./src/truncateBS.js";
+import { keyCodes } from "./src/keyCodes.js";
 
 const imageMenu = document.querySelector("#menu");
 const previewImage = document.querySelector("#preview img");
