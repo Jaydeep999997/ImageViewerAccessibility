@@ -15,16 +15,21 @@
 </head>
 
 <body>
+    <ul class="skip-links">
+        <li id="skip-to-main"> <a href="#mainContent">Skip to main content</a> </li>
+        <li id="skip-to-tablist"> <a href="#menu"> Skip to tablist </a> </li>
+        <li id="skip-to-tab"> <a href="#img0">Skip to tabs</a> </li>
+    </ul>
+
     <header class="banner">
         <h1>Image Viewer</h1>
     </header>
-    <main class="container">
-        <div role="tablist" aria-label="Image Gallery" aria-orientation="vertical" class="item" id="menu"> </div>
-        <figure tabindex="0" role="tabpanel" class="item" id="preview">
-            <img src="" alt="">
-            <figcaption></figcaption>
-        </figure>
+
+    <main tabindex="-1" id="mainContent" class="container">
+        <div tabindex="-1" role="tablist" aria-label="Image Gallery" aria-orientation="vertical" class="item" id="menu">
+        </div>
     </main>
+
     <script type="module" src="./src/keyCodes.js"></script>
     <script type="module" src="./src/dataSet.js"></script>
     <script type="module" src="./src/truncateBS.js"></script>

@@ -2,37 +2,40 @@ import { imageData } from "./src/dataSet.js";
 import { truncate } from "./src/truncateBS.js";
 import { keyCodes } from "./src/keyCodes.js";
 
+const mainContainer = document.querySelector("main");
 const imageMenu = document.querySelector("#menu");
-const previewImage = document.querySelector("#preview img");
-const previewCaption = document.querySelector("#preview figcaption");
 
 // pointer to current the image
 let imagePtr = -1;
 
 // remove highlights
 const removeImage = function (imageID) {
-  const container = document.querySelector(`#img${imageID}`);
-  container.setAttribute("aria-selected", "false");
-  container.classList.remove("highlight");
+  const tabContainer = document.querySelector(`#img${imageID}`);
+  tabContainer.setAttribute("aria-selected", "false");
+  tabContainer.classList.remove("highlight");
+
+  const tabPanelContainer = document.getElementById(
+    tabContainer.getAttribute("aria-controls")
+  );
+  tabPanelContainer.setAttribute("hidden", "true");
 };
 
 // add highlights and change image
 const addImage = function (imageID, setFocus) {
-  const container = document.querySelector(`#img${imageID}`);
-  container.setAttribute("aria-selected", "true");
-  container.classList.add("highlight");
+  const tabContainer = document.querySelector(`#img${imageID}`);
+  tabContainer.setAttribute("aria-selected", "true");
+  tabContainer.classList.add("highlight");
 
-  previewImage.setAttribute("src", imageData[imageID]["previewImage"]);
-  previewImage.setAttribute("alt", imageData[imageID]["description"]);
-  previewImage.setAttribute("title", imageData[imageID]["description"]);
-
-  previewCaption.innerText = imageData[imageID]["title"];
-
-  if (setFocus) {
-    container.focus();
-  }
+  const tabPanelContainer = document.getElementById(
+    tabContainer.getAttribute("aria-controls")
+  );
+  tabPanelContainer.removeAttribute("hidden");
 
   imagePtr = imageID;
+
+  if (setFocus) {
+    tabContainer.focus();
+  }
 };
 
 // switch from 'prevID' to 'currID'
@@ -82,7 +85,7 @@ const keyDownHandler = function (e) {
 };
 
 // creates a new thumbnail element and set attributes
-const newElement = function (imageID) {
+const newTab = function (imageID) {
   const container = document.createElement("button");
   container.setAttribute(
     "aria-label",
@@ -90,20 +93,43 @@ const newElement = function (imageID) {
   );
   container.setAttribute("role", "tab");
   container.setAttribute("aria-selected", "false");
+  container.setAttribute("aria-controls", `img-panel${imageID}`);
   container.setAttribute("id", `img${imageID}`);
   container.classList.add("img");
   container.addEventListener("click", () => switchImage(imagePtr, imageID));
+  container.addEventListener("keydown", keyDownHandler);
 
   const imgChild = document.createElement("img");
-  imgChild.setAttribute("aria-hidden", "true");
   imgChild.setAttribute("src", imageData[imageID]["previewImage"]);
   imgChild.setAttribute("alt", imageData[imageID]["description"]);
   imgChild.setAttribute("title", imageData[imageID]["description"]);
   container.appendChild(imgChild);
 
   const figCapChild = document.createElement("figcaption");
-  figCapChild.setAttribute("aria-hidden", "true");
   figCapChild.setAttribute("aria-label", imageData[imageID]["title"]);
+  figCapChild.textContent = imageData[imageID]["title"];
+  container.appendChild(figCapChild);
+
+  return container;
+};
+
+const newTabPanel = function (imageID) {
+  const container = document.createElement("figure");
+  container.setAttribute("id", `img-panel${imageID}`);
+  container.classList.add("item");
+  container.classList.add("preview");
+  container.setAttribute("role", "tabpanel");
+  container.setAttribute("tabindex", "0");
+  container.setAttribute("aria-labelledby", `img${imageID}`);
+  container.setAttribute("hidden", "true");
+
+  const imgChild = document.createElement("img");
+  imgChild.setAttribute("src", imageData[imageID]["previewImage"]);
+  imgChild.setAttribute("alt", imageData[imageID]["description"]);
+  imgChild.setAttribute("title", imageData[imageID]["description"]);
+  container.appendChild(imgChild);
+
+  const figCapChild = document.createElement("figcaption");
   figCapChild.textContent = imageData[imageID]["title"];
   container.appendChild(figCapChild);
 
@@ -119,10 +145,9 @@ const setText = function () {
 
 // initialize thumbnails of every image
 for (let imageID = 0; imageID < imageData.length; imageID++) {
-  imageMenu.appendChild(newElement(imageID));
+  imageMenu.appendChild(newTab(imageID));
+  mainContainer.appendChild(newTabPanel(imageID));
 }
-
-document.onkeydown = keyDownHandler;
 
 // initial view
 switchImage(-1, 0);
